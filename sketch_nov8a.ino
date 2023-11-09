@@ -1,4 +1,4 @@
-// chatgpt code dont use actually
+
 // Motor Control Pins
 int motor1Pin1 = 8;  // Output 1 of L293D, controls direction of Motor 1
 int motor1Pin2 = 2;  // Output 2 of L293D, controls direction of Motor 1
@@ -18,8 +18,9 @@ void setup() {
   pinMode(enable2Pin, OUTPUT);
   
   // Initialize serial communication
-  Serial.begin(9600); //Serial is an object that represents the serial communication interface in Arduino
-  Serial.println("Motor Test");
+  Serial.begin(9600); //Serial is an object that represents the serial communication interface in Arduino, serial.begin initializes the serial communication with a baud rate of 9600 bits per second. 
+  // This specifies the speed at which data is transmitted over the serial communication interface.
+  Serial.println("Motor Test"); // -  a function used to send data to the serial monitor, which is a tool within the Arduino IDE that allows you to view data and messages from your Arduino program.
 }
 
 void loop() {
