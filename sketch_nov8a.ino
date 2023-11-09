@@ -1,3 +1,4 @@
+// chatgpt code dont use actually
 // Motor Control Pins
 int motor1Pin1 = 8;  // Output 1 of L293D, controls direction of Motor 1
 int motor1Pin2 = 2;  // Output 2 of L293D, controls direction of Motor 1
