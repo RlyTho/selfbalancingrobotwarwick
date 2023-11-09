@@ -1,62 +1,74 @@
-#define IN1 8
-#define IN2 3
-#define IN4 10
-#define IN3 9
-#define EN1 5
-#define EN2 6
+// Motor Control Pins
+int motor1Pin1 = 8;  // Output 1 of L293D, controls direction of Motor 1
+int motor1Pin2 = 2;  // Output 2 of L293D, controls direction of Motor 1
+int enable1Pin = A2;  // Enable pin for Motor 1
 
-float current_angle;
+int motor2Pin1 = 4;  // Output 3 of L293D, controls direction of Motor 2
+int motor2Pin2 = 12;  // Output 4 of L293D, controls direction of Motor 2
+int enable2Pin = 6; // Enable pin for Motor 2
 
-
-void setup()
-{
-   Serial.begin(9600);
-  pinMode(A0, INPUT);
- 
-  pinMode(EN1 , OUTPUT);
-  pinMode(EN2 , OUTPUT);
-  pinMode(IN1 , OUTPUT);
-  pinMode(IN2 , OUTPUT);
-  pinMode(IN4 , OUTPUT);
-  pinMode(IN3 , OUTPUT);
-
-
+void setup() {
+  // Define motor control pins as OUTPUT
+  pinMode(motor1Pin1, OUTPUT);
+  pinMode(motor1Pin2, OUTPUT);
+  pinMode(enable1Pin, OUTPUT);
+  pinMode(motor2Pin1, OUTPUT);
+  pinMode(motor2Pin2, OUTPUT);
+  pinMode(enable2Pin, OUTPUT);
+  
+  // Initialize serial communication
+  Serial.begin(9600); //Serial is an object that represents the serial communication interface in Arduino
+  Serial.println("Motor Test");
 }
 
-void loop()
-{
-  sensor();
-  forward(1000);
-  backward(1000);
-}
+void loop() {
+  // Test Motor 1 (Forward, Stop, Reverse)
+  Serial.println("Motor 1: Forward");
+  digitalWrite(motor1Pin1, HIGH);
+  digitalWrite(motor1Pin2, LOW);
+  analogWrite(enable1Pin, 255); // Full speed
+  
+  delay(2000); // Run forward for 2 seconds
 
-void sensor()
-{
-  current_angle = analogRead(A0);
-  Serial.println(current_angle);
+  Serial.println("Motor 1: Stop");
+  digitalWrite(motor1Pin1, LOW);
+  digitalWrite(motor1Pin2, LOW);
+  
+  delay(1000); // Stop for 1 second
 
-  analogWrite(EN1, 255);
-  analogWrite(EN2, 255);
-}
-void forward(int wait)
-{
-  Serial.println();
-  Serial.println("Moving forward");
-  digitalWrite(IN1 , HIGH);
-  digitalWrite(IN2 , LOW);
-  digitalWrite(IN4 , HIGH);
-  digitalWrite(IN3 , LOW);
-  delay(wait);
-}
+  Serial.println("Motor 1: Reverse");
+  digitalWrite(motor1Pin1, LOW);
+  digitalWrite(motor1Pin2, HIGH);
+  analogWrite(enable1Pin, 255); // Full speed
 
+  delay(2000); // Run in reverse for 2 seconds
 
-void backward(int wait)
-{
-  Serial.println();
-  Serial.println("Moving backward");
-  digitalWrite(IN1 , LOW);
-  digitalWrite(IN2 , HIGH);
-  digitalWrite(IN4 , LOW);
-  digitalWrite(IN3 , HIGH);
-  delay(wait);
+  // Stop Motor 1
+  digitalWrite(motor1Pin1, LOW);
+  digitalWrite(motor1Pin2, LOW);
+  
+  // Test Motor 2 (Forward, Stop, Reverse)
+  Serial.println("Motor 2: Forward");
+  digitalWrite(motor2Pin1, HIGH);
+  digitalWrite(motor2Pin2, LOW);
+  analogWrite(enable2Pin, 255); // Full speed
+  
+  delay(2000); // Run forward for 2 seconds
+
+  Serial.println("Motor 2: Stop");
+  digitalWrite(motor2Pin1, LOW);
+  digitalWrite(motor2Pin2, LOW);
+  
+  delay(1000); // Stop for 1 second
+
+  Serial.println("Motor 2: Reverse");
+  digitalWrite(motor2Pin1, LOW);
+  digitalWrite(motor2Pin2, HIGH);
+  analogWrite(enable2Pin, 255); // Full speed
+
+  delay(2000); // Run in reverse for 2 seconds
+
+  // Stop Motor 2
+  digitalWrite(motor2Pin1, LOW);
+  digitalWrite(motor2Pin2, LOW);
 }
