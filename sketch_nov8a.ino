@@ -6,7 +6,7 @@ int enable1Pin = A2;  // Enable pin for Motor 1
 
 int motor2Pin1 = 4;  // Output 3 of L293D, controls direction of Motor 2
 int motor2Pin2 = 12;  // Output 4 of L293D, controls direction of Motor 2
-int enable2Pin = 6; // Enable pin for Motor 2
+int enable2Pin = 6; // Enable pin for Motor 2.
 
 void setup() {
   // Define motor control pins as OUTPUT
