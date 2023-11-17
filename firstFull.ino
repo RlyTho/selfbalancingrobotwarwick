@@ -1,14 +1,14 @@
 // Motor Control Pins
 int motor1Pin1 = 8;  // Output 1 of L293D, controls direction of Motor 1
 int motor1Pin2 = 2;  // Output 2 of L293D, controls direction of Motor 1
-int enable1Pin = A2;  // Enable pin for Motor 1
+int enable1Pin = 10;  // Enable pin for Motor 1
 
 int motor2Pin1 = 4;  // Output 3 of L293D, controls direction of Motor 2
 int motor2Pin2 = 12;  // Output 4 of L293D, controls direction of Motor 2
 int enable2Pin = 6; // Enable pin for Motor 2
 int gyroAnglePin = A0;
 
-int setPoint = 560;
+int setPoint = 520;
 
 int lastError = 0;
 
@@ -42,10 +42,15 @@ void loop() {
 
   lastError = error;
 
-  int wheelSpeed = abs(correction) / (512 * Kp) * 255;
+  int wheelSpeed = abs(correction);// / (512 * Kp) * 255;
 
   int upperDeadZone = 40;
   int lowerDeadZone = -40;
+
+  //Serial.println(error);
+  //Serial.println(wheelSpeed);
+  //Serial.println(angle);
+  Serial.println(wheelSpeed);
 
   // Test Motor 1 (Forward, Stop, Reverse)
   if (error < lowerDeadZone){
@@ -71,7 +76,7 @@ void loop() {
   }
 
   if (error >= lowerDeadZone && error <= upperDeadZone){
-    Serial.println(angle);
+    //Serial.println(angle);
     analogWrite(enable1Pin, 0); // speed
     analogWrite(enable2Pin, 0);
   }
