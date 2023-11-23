@@ -1,0 +1,85 @@
+// Motor Control Pins
+int motor1Pin1 = 8;  // Output 1 of L293D, controls direction of Motor 1
+int motor1Pin2 = 2;  // Output 2 of L293D, controls direction of Motor 1
+int enable1Pin = 10;  // Enable pin for Motor 1
+
+int motor2Pin1 = 4;  // Output 3 of L293D, controls direction of Motor 2
+int motor2Pin2 = 12;  // Output 4 of L293D, controls direction of Motor 2
+int enable2Pin = 6; // Enable pin for Motor 2
+int gyroAnglePin = A0;
+
+int setPoint = 520; // Angle that robot stands at when it is upright
+
+int lastError = 0; // declaring the variable so that it can be used later on in the code - "lasterror" is needed for the PID loop
+
+int interval = 1; // loop runs every 1 milisecond
+
+float Kp = 100.0; // proportional term of PID control
+float Kd = 0.0;  // Derivative term of PID control
+float Ki = 0.0; // Integral term of PID control
+
+void setup() {
+  // Define motor control pins as OUTPUT
+  pinMode(motor1Pin1, OUTPUT);
+  pinMode(motor1Pin2, OUTPUT);
+  pinMode(enable1Pin, OUTPUT);
+  pinMode(motor2Pin1, OUTPUT);
+  pinMode(motor2Pin2, OUTPUT);
+  pinMode(enable2Pin, OUTPUT);
+  
+  // Initialize serial communication
+  Serial.begin(9600); //Serial is an object that represents the serial communication interface in Arduino
+  Serial.println("Motor Test");
+}
+
+void loop() {
+
+  int angle = analogRead(gyroAnglePin); // angle that defines the current that the gyroscope is reading
+
+  int error = setPoint - angle; // defining the error as the setpoint (angle when upright) subtract the current angle
+
+  int correction = Kp * error + Ki * (error + lastError) * interval - Kd * (error - lastError) / interval; // PID control calculation
+
+  lastError = error; // PID loop requires previous error as well as current error
+
+  int wheelSpeed = abs(correction);// / (512 * Kp) * 255;
+
+  int upperDeadZone = 40; // 
+  int lowerDeadZone = -40; // Two anlgles that it considers as upright, i.e. if the angle falla out of this range the robot will move
+
+  //Serial.println(error);
+  //Serial.println(wheelSpeed);
+  //Serial.println(angle);
+  Serial.println(wheelSpeed); // print wheel speed
+
+  // Test Motor 1 (Forward, Stop, Reverse)
+  if (error < lowerDeadZone){ // if error is less than deadzone, move back
+    digitalWrite(motor1Pin1, HIGH);
+    digitalWrite(motor1Pin2, LOW);
+    digitalWrite(motor2Pin1, HIGH);
+    digitalWrite(motor2Pin2, LOW); 
+    
+    analogWrite(enable1Pin, wheelSpeed); // speed
+    analogWrite(enable2Pin, wheelSpeed); // speed
+
+  }
+
+  if (error > upperDeadZone){ // this means if the error is greater than the deadzone, the robot moves forwards 
+    digitalWrite(motor1Pin1, LOW);
+    digitalWrite(motor1Pin2, HIGH);
+    digitalWrite(motor2Pin1, LOW);
+    digitalWrite(motor2Pin2, HIGH);
+    
+    analogWrite(enable1Pin, wheelSpeed); // speed
+    analogWrite(enable2Pin, wheelSpeed); // speed
+
+  }
+
+  if (error >= lowerDeadZone && error <= upperDeadZone){ // if error is between the deadzones then don't move
+    //Serial.println(angle);
+    analogWrite(enable1Pin, 0); // speed
+    analogWrite(enable2Pin, 0);
+  }
+  
+  delay(interval);
+}
